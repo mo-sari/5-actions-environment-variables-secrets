@@ -2,13 +2,10 @@ name: Deployment
 on:
   push:
     branches:
-      - main
+      - master
       - dev
 env:
   MONGODB_DB_NAME: gha-demo
-# this is set in workflow level because it's basicaly the same in all the job's and steps
-# the env variables that we are setting in this workflow are all used in our app, so we set
-# them here to provide a value for them.
 jobs:
   test:
     env:
@@ -29,11 +26,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:XYZ
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
+        # in this line and the Output information step we are using env variables
+        # in workflow ( they are not only to be used in out app, we can use them in workflow jobs)
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: echo "MONGODB_USERNAME ${{env.MONGODB_DB_NAME}}"
+        # this is availabe hre because it is defined in this job
+        # env variables defined in workflow level are also available.
   deploy:
     needs: test
     runs-on: ubuntu-latest
