@@ -4,8 +4,15 @@ on:
     branches:
       - main
       - dev
+env:
+  MONGODB_DB_NAME: gha-demo
+# this is set in workflow level because it's basicaly the same in all the job's and steps
 jobs:
   test:
+    env:
+      MONGODB_CLUSTER_ADDRESS:
+      MONGODB_USERNAME:
+      MONGODB_PASSWORD:
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -29,5 +36,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Output information
-        run: |        
+        run: |
           echo "..."
